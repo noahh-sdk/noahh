@@ -1,23 +1,20 @@
 #pragma once
 
-#include <Noahh/Noahh.hpp>
+#include <Noahh/ui/Popup.hpp>
 
 USE_NOAHH_NAMESPACE();
 
 class ModListLayer;
 
-class SearchFilterPopup : public FLAlertLayer {
-    protected:
-        ModListLayer* m_modLayer;
-        CCPoint m_pos;
+class SearchFilterPopup : public Popup<ModListLayer*> {
+protected:
+    ModListLayer* m_modLayer;
 
-		bool init(ModListLayer* layer);
-        void addToggle(const char* title, int flag);
+    bool setup(ModListLayer* layer) override;
+    void addToggle(const char* title, int flag, CCPoint& pos);
 
-		void keyDown(cocos2d::enumKeyCodes) override;
-		void onClose(cocos2d::CCObject*);
-        void onToggle(cocos2d::CCObject*);
-		
-    public:
-        static SearchFilterPopup* create(ModListLayer* layer);
+    void onToggle(cocos2d::CCObject*);
+    
+public:
+    static SearchFilterPopup* create(ModListLayer* layer);
 };
