@@ -66,7 +66,8 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "Win32")
 		${NOAHH_LOADER_PATH}/include/link/libcurl.lib
 	)
 
-	set(NOAHH_PLATFORM_BINARY "Noahh.dll")
+	# Windows links against .lib and not .dll
+	set(NOAHH_PLATFORM_BINARY "Noahh.lib")
 elseif (NOAHH_TARGET_PLATFORM STREQUAL "Android")
 	message(FATAL_ERROR "IDK figure it out")
 endif()
