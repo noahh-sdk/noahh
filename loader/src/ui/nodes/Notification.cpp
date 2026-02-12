@@ -1,6 +1,7 @@
 #include <Noahh/ui/Notification.hpp>
 #include <Noahh/ui/TextRenderer.hpp>
 #include <Noahh/utils/WackyNoahhMacros.hpp>
+#include <Noahh/Utils.hpp>
 
 USE_NOAHH_NAMESPACE();
 

@@ -1,6 +1,7 @@
 #include <Noahh/ui/MDTextArea.hpp>
 #include <Noahh/utils/WackyNoahhMacros.hpp>
 #include <md4c.h>
+#include <Noahh/Utils.hpp>
 
 USE_NOAHH_NAMESPACE();
 

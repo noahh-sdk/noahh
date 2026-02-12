@@ -1,5 +1,6 @@
 #include <Noahh/ui/TextRenderer.hpp>
 #include <Noahh/utils/WackyNoahhMacros.hpp>
+#include <Noahh/Utils.hpp>
 #undef max
 #undef min
 
