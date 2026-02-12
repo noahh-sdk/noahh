@@ -1059,7 +1059,6 @@ class EditorUI : cocos2d::CCLayer, FLAlertLayerProtocol, ColorSelectDelegate, GJ
         return lel->m_editorUI;
     }
 
-    bool editButton2Usable() = mac 0x0, win 0x8b890, ios 0x0;
     void constrainGameLayerPosition() = mac 0x1c6d0, win 0x0, ios 0x0;
     void create(LevelEditorLayer*) = mac 0x8a80, win 0x0, ios 0x0;
     void deselectAll() = mac 0x1f300, win 0x86af0, ios 0x0;
@@ -2890,7 +2889,7 @@ class GameObject : CCSpritePlus {
     virtual void setChildColor(const cocos2d::ccColor3B&) = mac 0x341f20, win 0xee900, ios 0x0;
     virtual void setFlipX(bool) = mac 0x335a60, win 0x0, ios 0x0;
     virtual void setFlipY(bool) = mac 0x335ab0, win 0x0, ios 0x0;
-    virtual void customSetup() = mac 0x2fbba0, win 0xd1c10, ios 0x0;
+    virtual void customSetup() = mac 0x2fbba0, win 0x0, ios 0x0;
     virtual void setupCustomSprites() = mac 0x307f60, win 0xd7d50, ios 0x0;
     virtual void addMainSpriteToParent(bool) = mac 0x33a5b0, win 0xeb250, ios 0x0;
     virtual void resetObject() = mac 0x2fa620, win 0xd1470, ios 0x0;
@@ -3002,7 +3001,6 @@ class GameObject : CCSpritePlus {
     void deselectObject() = mac 0x0, win 0xeee50, ios 0x0;
     cocos2d::CCRepeatForever* createRotateAction(float f, int n) = mac 0x0, win 0xe49b0, ios 0x0;
     void setMyAction(cocos2d::CCAction* pAction) = mac 0x0, win 0xd1b90, ios 0x0;
-    bool canAllowMultiActivate() = mac 0x0, win 0xf06b0, ios 0x0;
 
     bool m_unk3;
     bool m_isBlueMaybe;
@@ -3160,7 +3158,7 @@ class GameObject : CCSpritePlus {
     int m_unk414;
     PAD = mac 0xc, win 0xc, android 0x0;
     cocos2d::CCPoint m_firstPosition;
-    PAD = mac 0x15, win 0x15, android 0x0;
+    PAD = mac 0x15, win 0x0, android 0x0;
     bool m_isTriggerable;
     PAD = mac 0x6, win 0x6, android 0x0;
     bool m_highDetail;
@@ -4019,7 +4017,7 @@ class PlayLayer : GJBaseGameLayer, CCCircleWaveDelegate, CurrencyRewardDelegate,
     void loadFromCheckpoint(CheckpointObject*) = mac 0x7f000, win 0x0, ios 0x0;
     void loadLastCheckpoint() = mac 0x7efc0, win 0x0, ios 0x0;
     void loadSavedObjectsState(gd::string) = mac 0x7f3d0, win 0x0, ios 0x0;
-    void markCheckpoint() = mac 0x7ef60, win 0x25fb60, ios 0x0;
+    void markCheckpoint() = mac 0x7ef60, win 0x20b450, ios 0x0;
     void moveCameraToPos(cocos2d::CCPoint) = mac 0x7c980, win 0x0, ios 0x0;
     virtual void onEnterTransitionDidFinish() = mac 0x806e0, win 0x20dbd0, ios 0x0;
     virtual void onExit() = mac 0x80710, win 0x020D810, ios 0x0;
@@ -4073,7 +4071,7 @@ class PlayLayer : GJBaseGameLayer, CCCircleWaveDelegate, CurrencyRewardDelegate,
     void startRecordingDelayed() = mac 0x7fed0, win 0x0, ios 0x0;
     void stopCameraShake() = mac 0x75900, win 0x0, ios 0x0;
     void stopRecording() = mac 0x6d090, win 0x0, ios 0x0;
-    void storeCheckpoint(CheckpointObject*) = mac 0x7ef10, win 0x0, ios 0x0;
+    void storeCheckpoint(CheckpointObject*) = mac 0x7ef10, win 0x20b420, ios 0x0;
     void switchToFlyMode(PlayerObject*, GameObject*, bool, int) = mac 0x7baf0, win 0x0, ios 0x0;
     void switchToRobotMode(PlayerObject*, GameObject*, bool) = mac 0x7bc80, win 0x0, ios 0x0;
     void switchToRollMode(PlayerObject*, GameObject*, bool) = mac 0x7bbe0, win 0x0, ios 0x0;
