@@ -51,7 +51,6 @@ BOOL WINAPI DllMain(HINSTANCE lib, DWORD reason, LPVOID) {
 #endif
 
 
-
 int noahhEntry(void* platformData) {
     // setup internals
 
@@ -128,5 +127,6 @@ int noahhEntry(void* platformData) {
     InternalMod::get()->log()
         << Severity::Debug
         << "Entry done.";
+        
     return 0;
 }

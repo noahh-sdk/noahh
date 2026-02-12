@@ -5,11 +5,11 @@
 #pragma warning(disable: 4244) // narrowing conversion
 
 #include <Windows.h>
-#include <meta/cdecl.hpp>
-#include <meta/function.hpp>
-#include <meta/optcall.hpp>
-#include <meta/membercall.hpp>
-#include <meta/thiscall.hpp>
+#include <Noahh/meta/cdecl.hpp>
+#include <Noahh/meta/function.hpp>
+#include <Noahh/meta/optcall.hpp>
+#include <Noahh/meta/membercall.hpp>
+#include <Noahh/meta/thiscall.hpp>
 
 #include <type_traits>
 #include <typeinfo>
@@ -24,6 +24,11 @@ namespace noahh {
 namespace noahh::base {
 	NOAHH_NOINLINE inline uintptr_t get() {
 		static uintptr_t base = reinterpret_cast<uintptr_t>(GetModuleHandle(0));
+		return base;
+	}
+
+	NOAHH_NOINLINE inline uintptr_t getCocos() {
+		static uintptr_t base = reinterpret_cast<uintptr_t>(GetModuleHandleA("libcocos2d.dll"));
 		return base;
 	}
 }
