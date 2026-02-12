@@ -15,11 +15,11 @@ USE_NOAHH_NAMESPACE();
 
 class $modify(MenuLayer) {
 	void onMoreGames(CCObject*) {
-        FLAlertLayer::create(
-            "Noahh",
-            "Hello World from my Custom Mod!",
-            "OK"
-        )->show();
+		FLAlertLayer::create(
+			"Noahh",
+			"Hello World from my Custom Mod!",
+			"OK"
+		)->show();
 	}
 };
 ```
