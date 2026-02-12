@@ -1,7 +1,7 @@
 #include "InternalMod.hpp"
 #include "about.hpp"
 
-ModInfo getInternalModInfo() {
+static ModInfo getInternalModInfo() {
     ModInfo info;
     
     info.m_id          = "noahh.loader";
@@ -11,6 +11,11 @@ ModInfo getInternalModInfo() {
     info.m_details     = LOADER_ABOUT_MD;
     info.m_version     = LOADER_VERSION;
     info.m_supportsDisabling = false;
+    info.m_spritesheets = {
+        "noahh.loader_LogoSheet",
+        "noahh.loader_APISheet",
+        "noahh.loader_BlankSheet"
+    };
 
     return info;
 }

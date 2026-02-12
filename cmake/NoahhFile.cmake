@@ -23,3 +23,18 @@ function(create_noahh_file proname)
     endif()
 
 endfunction()
+
+function(package_noahh_resources proname src dest prefix)
+    message(STATUS "Packaging resources from ${src} with prefix ${prefix} into ${dest}")
+
+    if(NOAHH_CLI STREQUAL "NOAHH_CLI-NOTFOUND")
+        message(WARNING "package_noahh_resources called, but Noahh CLI was not found - You will need to manually package the resources")
+    else()
+
+        add_custom_target(${proname}_PACKAGE ALL
+            DEPENDS ${proname}
+            COMMAND ${NOAHH_CLI} resources ${src} ${dest} --prefix ${prefix} --cached
+            VERBATIM USES_TERMINAL
+        )
+    endif()
+endfunction()

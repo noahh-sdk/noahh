@@ -6,12 +6,8 @@ class InternalMod;
 
 USE_NOAHH_NAMESPACE();
 
-class InternalLoader;
-
 class InternalMod : public Mod {
     protected:
-        friend class InternalLoade;
-
         InternalMod();
         virtual ~InternalMod();
 
