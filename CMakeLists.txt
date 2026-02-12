@@ -30,6 +30,12 @@ add_custom_target(CodegenRun ALL
 add_dependencies(${PROJECT_NAME} CodegenRun)
 add_dependencies(CodegenRun Codegen)
 
+# Hacky way to supress the not generated error
+if (NOT EXISTS ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
+	make_directory(${NOAHH_CODEGEN_PATH})
+	execute_process(COMMAND touch ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
+endif()
+
 target_sources(${PROJECT_NAME} INTERFACE ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
 target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_CODEGEN_PATH}/..)
 
@@ -39,7 +45,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 	${NOAHH_LOADER_PATH}/include/Noahh/cocos/cocos2dx
 	${NOAHH_LOADER_PATH}/include/Noahh/cocos/cocos2dx/include
 	${NOAHH_LOADER_PATH}/include/Noahh/cocos/cocos2dx/support/zip_support
-	${NOAHH_LOADER_PATH}/include/Noahh/cocos/cocos2dx/kazmath/include
+	${NOAHH_LOADER_PATH}/include/NOAHH/cocos/cocos2dx/kazmath/include
 	${NOAHH_LOADER_PATH}/include/Noahh/cocos/extensions
 	${NOAHH_LOADER_PATH}/include/Noahh/fmod
 )
@@ -50,7 +56,7 @@ add_subdirectory(fmt)
 
 target_link_libraries(${PROJECT_NAME} INTERFACE filesystem fmt)
 
-add_subdirectory(loader)
+
 
 if (NOT EXISTS ${NOAHH_BIN_PATH})
 	make_directory(${NOAHH_BIN_PATH})
@@ -64,6 +70,7 @@ endif()
 
 
 if (PROJECT_IS_TOP_LEVEL)
+	add_subdirectory(loader)
 	target_link_libraries(${PROJECT_NAME} INTERFACE noahh-loader)
 elseif(EXISTS ${NOAHH_PLATFORM_BIN_PATH})
 	target_link_libraries(${PROJECT_NAME} INTERFACE "${NOAHH_PLATFORM_BIN_PATH}")
