@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Noahh/Noahh.hpp>
+#include <Noahh/Bindings.hpp>
 #include "TextRenderer.hpp"
 #include "ScrollLayer.hpp"
 

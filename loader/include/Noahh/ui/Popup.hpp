@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Noahh/Noahh.hpp>
+#include <Noahh/Bindings.hpp>
 
 namespace noahh {
     template<typename T, typename... InitArgs>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Noahh/Noahh.hpp>
+#include <Noahh/Bindings.hpp>
 #include "SceneManager.hpp"
 #include <chrono>
 #include "../utils/Ref.hpp"
@@ -21,7 +21,7 @@ namespace noahh {
         NotificationLocation::BottomRight;
     #else
         NotificationLocation::TopCenter;
-    #endif;
+    #endif
 
     class Notification;
     class NotificationManager;
