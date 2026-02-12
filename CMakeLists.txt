@@ -33,7 +33,11 @@ add_dependencies(CodegenRun Codegen)
 # Hacky way to supress the not generated error
 if (NOT EXISTS ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
 	make_directory(${NOAHH_CODEGEN_PATH})
-	execute_process(COMMAND touch ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
+	if (WIN32)
+		execute_process(COMMAND type ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
+	else()
+		execute_process(COMMAND touch ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
+	endif()
 endif()
 
 target_sources(${PROJECT_NAME} INTERFACE ${NOAHH_CODEGEN_PATH}/GeneratedSource.cpp)
