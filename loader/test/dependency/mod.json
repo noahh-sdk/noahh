@@ -1,0 +1,9 @@
+{
+    "noahh":        "v0.1.0",
+	"version":      "v1.0.0",
+	"id":           "noahh.testdep",
+    "name":         "Noahh Test Dependency",
+    "developer":    "Noahh Team",
+    "description":  "Unit test dependency for Noahh",
+    "binary":       "TestDependency"
+}

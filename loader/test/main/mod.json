@@ -1,0 +1,19 @@
+{
+    "noahh":        "v0.1.0",
+	"version":      "v1.0.0",
+	"id":           "noahh.test",
+    "name":         "Noahh Test",
+    "developer":    "Noahh Team",
+    "description":  "unit test for noahh",
+    "binary":       "TestMod",
+    "datastore": {
+        "times-opened": 1
+    },
+    "dependencies": [
+        {
+            "id": "noahh.testdep",
+            "version": "v1.0.*",
+            "required": true
+        }
+    ]
+}
