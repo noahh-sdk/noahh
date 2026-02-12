@@ -134,18 +134,22 @@ if (APPLE)
 	endif()
 elseif (WIN32)
 	add_subdirectory(launcher/windows)
-	target_include_directories(${PROJECT_NAME} PRIVATE dobby/include)
-	target_link_directories(${PROJECT_NAME} PRIVATE dobby)
-	target_link_libraries(${PROJECT_NAME} dobby)
 
-	set(DOBBY_GENERATE_SHARED OFF CACHE BOOL "Build dobby shared library" FORCE)
-	# set(DOBBY_DEBUG ON CACHE BOOL "Build dobby shared library" FORCE)
-	add_subdirectory(dobby)
+	add_subdirectory(minhook)
+	target_link_libraries(${PROJECT_NAME} minhook)
+
+	# target_include_directories(${PROJECT_NAME} PRIVATE dobby/include)
+	# target_link_directories(${PROJECT_NAME} PRIVATE dobby)
+	# target_link_libraries(${PROJECT_NAME} dobby)
+
+	# set(DOBBY_GENERATE_SHARED OFF CACHE BOOL "Build dobby shared library" FORCE)
+	# # set(DOBBY_DEBUG ON CACHE BOOL "Build dobby shared library" FORCE)
+	# add_subdirectory(dobby)
 
 	target_link_libraries(${PROJECT_NAME} dbghelp)
 endif()
 
-# #Build test mods if needed
+# Build test mods if needed
 if(NOT NOAHH_DONT_BUILD_TEST_MODS)
 	if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 		add_subdirectory(test)

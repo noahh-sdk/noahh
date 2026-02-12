@@ -44,6 +44,7 @@ public:
 	 * state of the event before setting it to true
 	 */
 	bool shownInfoAlert(std::string const& key);
+	
 	void queueInGDThread(std::function<void NOAHH_CALL(void)> func);
 	void executeGDThreadQueue();
 
