@@ -12,9 +12,9 @@ static ModInfo getInternalModInfo() {
     info.m_version     = LOADER_VERSION;
     info.m_supportsDisabling = false;
     info.m_spritesheets = {
-        "noahh.loader_LogoSheet",
-        "noahh.loader_APISheet",
-        "noahh.loader_BlankSheet"
+        "noahh.loader/LogoSheet",
+        "noahh.loader/APISheet",
+        "noahh.loader/BlankSheet"
     };
 
     return info;
