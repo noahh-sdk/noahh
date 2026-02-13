@@ -90,6 +90,8 @@ namespace noahh {
     
     public:
         static BasedButtonSprite* create(cocos2d::CCNode* ontop, int type, int size, int color);
+
+        cocos2d::CCNode* getTopNode() const;
     };
 
     class NOAHH_DLL CircleButtonSprite : public BasedButtonSprite {

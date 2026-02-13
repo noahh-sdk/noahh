@@ -57,7 +57,7 @@ namespace noahh {
         ~LogPtr();
 
         std::string toString(bool logTime = true) const;
-        std::vector<LogMetadata*> const& getData() const;
+        std::vector<LogMetadata*> getData() const;
 
         log_clock::time_point getTime() const;
         std::string getTimeString() const;

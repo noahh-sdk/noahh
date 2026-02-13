@@ -307,7 +307,7 @@ namespace noahh {
         TextAlignment getCurrentHorizontalAlign() const;
 
         void moveCursor(cocos2d::CCPoint const& pos);
-        cocos2d::CCPoint const& getCursorPos();
+        cocos2d::CCPoint getCursorPos();
     };
 
     /**
