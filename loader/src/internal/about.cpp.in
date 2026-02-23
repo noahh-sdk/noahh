@@ -1,0 +1,15 @@
+#include "about.hpp"
+
+noahh::VersionInfo about::getLoaderVersion() {
+    return {
+        @PROJECT_VERSION_MAJOR@,
+        @PROJECT_VERSION_MINOR@,
+        @PROJECT_VERSION_PATCH@,
+        @PROJECT_VERSION_TAG_CONSTR@
+    };
+}
+const char* about::getLoaderVersionStr() { return "@PROJECT_VERSION@@PROJECT_VERSION_SUFFIX@"; }
+const char* about::getLoaderCommitHash() { return "@NOAHH_COMMIT_HASH@"; }
+const char* about::getBindingsCommitHash() { return "@NOAHH_BINDINGS_COMMIT_HASH@"; }
+const char* about::getLoaderModJson() { return R"JSON_SEPARATOR(@LOADER_MOD_JSON@)JSON_SEPARATOR"; }
+

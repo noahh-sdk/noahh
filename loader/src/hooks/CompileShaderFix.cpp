@@ -1,0 +1,76 @@
+#include <Noahh/Noahh.hpp>
+#include <loader/LoaderImpl.hpp>
+
+using namespace noahh::prelude;
+
+$on_mod(Loaded) {
+    if (LoaderImpl::get()->isForwardCompatMode()) return;
+
+    // patch an abort() call to "return false;" in CCGLProgram::compileShader
+    // for some reason cocos only properly returns false on winRT, everywhere
+    // else it just closes the whole game
+
+#if defined(NOAHH_IS_WINDOWS)
+    auto addr = reinterpret_cast<uintptr_t>(
+        GetProcAddress(
+            GetModuleHandle("libcocos2d.dll"), "?compileShader@CCGLProgram@cocos2d@@AEAA_NPEAIIPEBD@Z"
+        )
+    ) + 0xbb;
+
+    (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+        0x31, 0xc0, // xor eax, eax
+        0xeb, 0x07 // jmp +7 (to a nearby ret)
+    });
+#elif defined(NOAHH_IS_ANDROID64)
+    auto addr = reinterpret_cast<uintptr_t>(
+        dlsym(RTLD_DEFAULT, "_ZN7cocos2d11CCGLProgram13compileShaderEPjjPKc")
+    ) + 0x74;
+
+    (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+        0x1f, 0x20, 0x03, 0xd5 // nop (skip if statement)
+    });
+#elif defined(NOAHH_IS_ANDROID32)
+    auto addr = reinterpret_cast<uintptr_t>(
+        dlsym(RTLD_DEFAULT, "_ZN7cocos2d11CCGLProgram13compileShaderEPjjPKc")
+    ) + 0x43;
+
+    (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+        0x14, 0xe0 // b +2c (skip if statement)
+    });
+#elif defined(NOAHH_IS_ARM_MAC)
+    #if NOAHH_COMP_GD_VERSION != 22081
+        #error "Unsupported GD version!"
+    #endif
+
+    auto addr = base::get() + 0x39d458;
+
+    (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+        0x1f, 0x20, 0x03, 0xd5 // nop (skip if statement)
+    });
+#elif defined(NOAHH_IS_INTEL_MAC)
+    #if NOAHH_COMP_GD_VERSION != 22081
+        #error "Unsupported GD version!"
+    #endif
+
+    auto addr = base::get() + 0x42aa35;
+
+    (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+        0x48, 0x90, // nop (skip if statement)
+    });
+#elif defined(NOAHH_IS_IOS)
+    #if NOAHH_COMP_GD_VERSION != 22081
+        #error "Unsupported GD version!"
+    #endif
+
+    if (Loader::get()->isPatchless()) {
+        NOAHH_MOD_STATIC_PATCH(0x135374, "\x1f\x20\x03\xd5");
+    }
+    else {
+        auto addr = base::get() + 0x135374;
+        (void) Mod::get()->patch(reinterpret_cast<void*>(addr), {
+            0x1f, 0x20, 0x03, 0xd5 // nop (skip if statement)
+        });
+    }
+#endif
+};
+
