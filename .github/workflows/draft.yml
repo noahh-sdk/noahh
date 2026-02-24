@@ -1,0 +1,73 @@
+name: Draft Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  draft:
+    name: Draft Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Development Release
+        uses: robinraju/release-downloader@v1.9
+        with:
+          tag: nightly
+          fileName: '*'
+          tarBall: false
+          zipBall: true
+          out-file-path: 'dev'
+
+      - name: Declare Version Variable
+        id: ref
+        shell: bash
+        run: |
+          VERSION=$(unzip -p ${{ github.workspace }}/dev/noahh-nightly.zip noahh-sdk-noahh-*/VERSION | xargs)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # test if release already exists
+          set +e
+          curl --fail "https://api.github.com/repos/noahh-sdk/noahh/releases/tags/v$VERSION" --silent --output /dev/null
+          RESULT=$?
+          set -e
+          
+          if [ $RESULT -eq 0 ]; then
+            echo "Release $VERSION already exists! Not replacing it.."
+            exit 1
+          fi
+
+      - name: Move Files
+        run: |
+          mv dev/noahh-installer-*-win.exe noahh-installer-v${{ steps.ref.outputs.version }}-win.exe
+          mv dev/noahh-installer-*-mac.pkg noahh-installer-v${{ steps.ref.outputs.version }}-mac.pkg
+          mv dev/noahh-installer-*-linux.sh noahh-installer-v${{ steps.ref.outputs.version }}-linux.sh
+          mv dev/noahh-*-win.zip noahh-v${{ steps.ref.outputs.version }}-win.zip
+          mv dev/noahh-*-mac.zip noahh-v${{ steps.ref.outputs.version }}-mac.zip
+          mv dev/noahh-*-android32.zip noahh-v${{ steps.ref.outputs.version }}-android32.zip
+          mv dev/noahh-*-android64.zip noahh-v${{ steps.ref.outputs.version }}-android64.zip
+          mv dev/noahh-*-ios.zip noahh-v${{ steps.ref.outputs.version }}-ios.zip
+          mv dev/resources.zip resources.zip
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.ref.outputs.version }}
+          name: Noahh v${{ steps.ref.outputs.version }}
+          body: |
+            TODO before publishing:
+             - mark if pre-release
+             - add changelog
+             - remove this
+          draft: true
+          files: |
+            ./noahh-installer-v${{ steps.ref.outputs.version }}-win.exe
+            ./noahh-installer-v${{ steps.ref.outputs.version }}-mac.pkg
+            ./noahh-installer-v${{ steps.ref.outputs.version }}-linux.sh
+            ./noahh-v${{ steps.ref.outputs.version }}-win.zip
+            ./noahh-v${{ steps.ref.outputs.version }}-mac.zip
+            ./noahh-v${{ steps.ref.outputs.version }}-android32.zip
+            ./noahh-v${{ steps.ref.outputs.version }}-android64.zip
+            ./noahh-v${{ steps.ref.outputs.version }}-ios.zip
+            ./resources.zip
+

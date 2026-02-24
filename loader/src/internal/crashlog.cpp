@@ -1,0 +1,190 @@
+#include "crashlog.hpp"
+#include <fmt/core.h>
+#include "about.hpp"
+#include "../loader/ModImpl.hpp"
+#include <Noahh/Utils.hpp>
+#include <Noahh/utils/web.hpp>
+#include <asp/time/SystemTime.hpp>
+#include <Noahh/utils/async.hpp>
+
+using namespace noahh::prelude;
+
+std::string crashlog::getDateString(bool filesafe) {
+    auto const now = std::chrono::system_clock::now();
+    if (filesafe) {
+        return fmt::format("{:%F_%H-%M-%S}", now);
+    }
+    return fmt::format("{:%FT%T%z}", now);
+}
+
+void crashlog::printNoahhInfo(Buffer& stream) {
+    stream.append(
+        "Loader Version: {}\n"
+        "Loader Commit: {}\n"
+        "Bindings Commit: {}\n"
+        "Installed mods: {}\n"
+        "Problems: {}\n",
+        Loader::get()->getVersion().toVString(),
+        about::getLoaderCommitHash(),
+        about::getBindingsCommitHash(),
+        Loader::get()->getAllMods().size(),
+        Loader::get()->getLoadProblems().size()
+    );
+}
+
+void crashlog::printMods(Buffer& stream) {
+    auto mods = Loader::get()->getAllMods();
+    if (mods.empty()) {
+        stream.append("<None>\n");
+        return;
+    }
+
+    std::sort(mods.begin(), mods.end(), [](Mod* a, Mod* b) {
+        auto const s1 = a->getID();
+        auto const s2 = b->getID();
+        return std::lexicographical_compare(s1.begin(), s1.end(), s2.begin(), s2.end(), [](auto a, auto b) {
+            return std::tolower(a) < std::tolower(b);
+        });
+    });
+    using namespace std::string_view_literals;
+    for (auto& mod : mods) {
+        stream.append("{} | [{}] {}\n",
+            mod->isCurrentlyLoading() ? "o"sv :
+            mod->isLoaded() ? "x"sv :
+            mod->targetsOutdatedVersion() ? "*"sv : // thank you very much for this bug report
+            mod->failedToLoad() ? "!"sv : // thank you for this bug report
+            mod->shouldLoad() ? "~"sv :
+            " "sv,
+            mod->getVersion().toVString(), mod->getID()
+        );
+    }
+}
+
+void crashlog::updateFunctionBindings() {
+    constexpr uint64_t UPDATE_INTERVAL = 24 * 60 * 60; // one day
+    if (Mod::get()->getSavedValue<uint64_t>("bindings-update-time") + UPDATE_INTERVAL > std::time(nullptr)) {
+        return;
+    }
+
+    async::spawn(
+        web::WebRequest().get(
+            "https://prevter.github.io/bindings-meta/CodegenData-"
+            NOAHH_GD_VERSION_STRING "-"
+            NOAHH_WINDOWS("Win64") NOAHH_INTEL_MAC("Intel") NOAHH_ARM_MAC("Arm") NOAHH_IOS("iOS")
+            ".json"
+        ),
+        [](web::WebResponse res) {
+            if (!res.ok()) return;
+
+            (void) res.into(dirs::getNoahhSaveDir() / "bindings.json");
+            Mod::get()->setSavedValue<uint64_t>("bindings-update-time", std::time(nullptr));
+        }
+    );
+}
+
+static std::vector<crashlog::FunctionBinding> const& getBindings() {
+    static auto bindings = file::readFromJson<std::vector<crashlog::FunctionBinding>>(
+        dirs::getNoahhSaveDir() / "bindings.json"
+    ).unwrapOrDefault();
+    return bindings;
+}
+
+std::string_view crashlog::lookupClosestFunction(uintptr_t& address) {
+    auto& bindings = getBindings();
+    if (bindings.empty()) { return {}; }
+
+    auto it = std::lower_bound(
+        bindings.begin(), bindings.end(), address,
+        [](FunctionBinding const& a, uintptr_t b) { return a.offset < b; }
+    );
+
+    if (it == bindings.end() || it->offset > address) {
+        if (it == bindings.begin()) return {};
+        --it;
+    }
+
+    address -= it->offset;
+    return it->name;
+}
+
+std::string_view crashlog::lookupFunctionByOffset(uintptr_t address) {
+    auto& bindings = getBindings();
+    if (bindings.empty()) { return {}; }
+
+    auto it = std::lower_bound(
+        bindings.begin(), bindings.end(), address,
+        [](FunctionBinding const& a, uintptr_t b) { return a.offset < b; }
+    );
+
+    if (it != bindings.end() && it->offset == address) {
+        return it->name;
+    }
+
+    return {};
+}
+
+std::string crashlog::writeCrashlog(noahh::Mod* faultyMod, std::string_view info, std::string_view stacktrace, std::string_view registers) {
+    std::filesystem::path outPath;
+    return writeCrashlog(faultyMod, info, stacktrace, registers, outPath);
+}
+
+std::string crashlog::writeCrashlog(
+    Mod* faultyMod,
+    std::string_view info,
+    std::string_view stacktrace,
+    std::string_view registers,
+    std::filesystem::path& outPath
+) {
+    // make sure crashlog directory exists
+    (void)utils::file::createDirectoryAll(crashlog::getCrashLogDirectory());
+
+    // add a file to let Noahh know on next launch that it crashed previously
+    // this could also be done by saving a loader setting or smth but eh.
+    (void)utils::file::writeBinary(crashlog::getCrashLogDirectory() / "last-crashed", {});
+
+    Buffer file;
+
+    file.append(getDateString(false));
+    file.append("\nWhoopsies! An unhandled exception has occurred.\n");
+
+    if (faultyMod) {
+        file.append(
+            "It appears that the crash occurred while executing code from the \"{}\" mod. "
+            "Please submit this crash report to its developers ({}) for assistance.\n",
+            faultyMod->getID(),
+            fmt::join(faultyMod->getDevelopers(), ", ")
+        );
+    }
+
+    // noahh info
+    file.append("\n== Noahh Information ==\n");
+    printNoahhInfo(file);
+
+    // exception info
+    file.append("\n== Exception Information ==\n");
+    file.append(info);
+
+    // stack trace
+    file.append("\n== Stack Trace ==\n");
+    file.append(stacktrace);
+
+    // registers
+    file.append("\n== Register States ==\n");
+    file.append(registers);
+
+    // mods
+    file.append("\n== Installed Mods ==\n");
+    printMods(file);
+
+    // save actual file
+    outPath = crashlog::getCrashLogDirectory() / (getDateString(true) + ".log");
+    std::ofstream actualFile;
+    actualFile.open(
+        outPath, std::ios::app
+    );
+    actualFile << file.view() << std::flush;
+    actualFile.close();
+
+    return file.str();
+}
+

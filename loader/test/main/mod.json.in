@@ -1,0 +1,21 @@
+{
+    "noahh":        "@NOAHH_VERSION_FULL@",
+    "gd": {
+        "win": "*",
+        "mac": "*",
+        "android": "*",
+        "ios": "*"
+    },
+	"version":      "1.0.0",
+	"id":           "noahh.test",
+    "name":         "Noahh Test",
+    "developer":    "Noahh Team",
+    "description":  "unit test for noahh",
+    "dependencies": {
+        "noahh.testdep": {
+            "version": ">=1.0.0",
+            "required": true
+        }
+    }
+}
+

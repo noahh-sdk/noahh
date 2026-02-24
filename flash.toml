@@ -1,0 +1,114 @@
+
+# Configuration file for the Flash C++ documentation generator.
+# https://github.com/noahh-sdk/flash
+
+[project]
+name = "Noahh"
+version = "" # dont bother
+repository = "https://github.com/noahh-sdk/noahh"
+tree = "https://github.com/noahh-sdk/noahh/tree/main"
+icon = "loader/resources/logos/noahh-circle.png"
+
+[tutorials]
+dir = "docs"
+assets = [
+    "docs/assets/*.png",
+    "docs/assets/settings/*.png",
+    "docs/assets/handbook/vol1/*.png",
+    "docs/assets/handbook/vol2/*.png",
+]
+
+[[external-libs]]
+pattern = "matjson"
+repository = "https://github.com/noahh-sdk/json"
+
+[[external-libs]]
+pattern = "Result.hpp"
+repository = "https://github.com/noahh-sdk/result"
+
+[[external-libs]]
+pattern = "asp2"
+repository = "https://github.com/dankmeme01/asp2"
+
+[[external-libs]]
+pattern = "arc"
+repository = "https://github.com/dankmeme01/arc"
+
+[[sources]]
+name = "Noahh"
+dir = "loader/include"
+include = [
+    "Noahh/**/*.hpp",
+    "Noahh/**/*.h",
+]
+exclude = [
+    "Noahh/Modify.hpp",
+    "Noahh/modify/Comparer.hpp",
+    "Noahh/platform/*.hpp",
+    "Noahh/c++stl/**/*.hpp",
+    "Noahh/c++stl/**/*.h",
+    "Noahh/fmod/fmod_android.h",
+    # All of the relevant cocos headers are included through Noahh headers
+    "Noahh/cocos/**/*.h"
+]
+
+[[sources]]
+name = "Bindings"
+dir = "build-docs/bindings/bindings"
+include = [
+    "Noahh/binding/*.hpp"
+]
+# Bindings are generated at compile time
+exists-online = false
+
+[ignore]
+patterns-name = [
+    # anything that starts with a double underscore
+    # shouldnt be included
+    "^__",
+    "^tinyxml2$",
+    "^format_as$",
+    # operator overloads
+    "^operator\\W"
+]
+patterns-full = [
+    "^noahh::modifier",
+    "^noahh::prelude",
+    "^noahh::stl",
+    "^noahh::noahh_internal"
+]
+
+# CMake options
+
+[cmake]
+config-args = [
+    "-G", "Ninja",
+    "-DCMAKE_CXX_COMPILER=Clang",
+    "-DCMAKE_C_COMPILER=Clang",
+    "-DNOAHH_BUILDING_DOCS=On",
+    "-DNOAHH_PLATFORM_NAME=Win64",
+    "-DNOAHH_CODEGEN_CMAKE_ARGS=-DCMAKE_CXX_COMPILER=Clang;-DCMAKE_C_COMPILER=Clang",
+    "-DWIN32=On"
+]
+build-dir = "build-docs"
+
+# The file we use to get all the include paths and such
+infer-args-from = "loader/src/load.cpp"
+
+[[scripts.css]]
+name = "default.css"
+content = "docs/flash-template/default.css"
+
+[[scripts.css]]
+name = "nav.css"
+content = "docs/flash-template/nav.css"
+
+[[scripts.css]]
+name = "content.css"
+content = "docs/flash-template/content.css"
+
+[[scripts.css]]
+name = "themes.css"
+
+content = "docs/flash-template/themes.css"
+

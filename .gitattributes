@@ -1,0 +1,9 @@
+loader/include/Noahh/cocos/** linguist-vendored
+loader/include/Noahh/external/** linguist-vendored
+loader/include/Noahh/fmod/** linguist-vendored
+loader/include/link/win64/include/** linguist-vendored
+loader/include/link/macos/include/** linguist-vendored
+loader/include/link/ios/include/** linguist-vendored
+loader/include/link/android32/include/** linguist-vendored
+loader/include/link/android64/include/** linguist-vendored
+
