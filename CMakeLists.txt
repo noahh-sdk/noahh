@@ -314,7 +314,7 @@ if (DEFINED NOAHH_TULIPHOOK_REPO_PATH)
 	message(STATUS "Using ${NOAHH_TULIPHOOK_REPO_PATH} for TulipHook")
 	add_subdirectory(${NOAHH_TULIPHOOK_REPO_PATH} ${NOAHH_TULIPHOOK_REPO_PATH}/build)
 else()
-	CPMAddPackage("gh:noahh-sdk/TulipHook@3.1.8")
+	CPMAddPackage("gh:noahh-sdk/TulipHook@3.1.9")
 endif()
 set(CMAKE_WARN_DEPRECATED ON CACHE BOOL "" FORCE)
 
