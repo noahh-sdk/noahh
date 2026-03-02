@@ -247,7 +247,7 @@ if (NOT NOAHH_BUILDING_DOCS)
 	# sets ZLIB_LIBRARY and ZLIB_INCLUDE_DIR
 	include(DownloadNetLibs.cmake)
 	
-	CPMAddPackage("gh:noahh-sdk/minizip-ng#e9dda96")
+	CPMAddPackage("gh:noahh-sdk/minizip-ng#8dc51ce")
 
 	# Silence warnings from dependencies
 	include(CheckCXXCompilerFlag)
