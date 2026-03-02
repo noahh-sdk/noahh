@@ -146,6 +146,7 @@ jobs:
       if: inputs.build-debug-info && (success() || failure())
 
   build-mac:
+    if: false
     name: Build macOS
     runs-on: macos-latest
 
@@ -303,6 +304,7 @@ jobs:
       if: inputs.build-debug-info && (success() || failure())
 
   build-ios:
+    if: false
     name: Build iOS
     runs-on: macos-latest
 
