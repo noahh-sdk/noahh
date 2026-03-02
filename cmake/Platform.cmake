@@ -42,16 +42,7 @@ if (NOAHH_TARGET_PLATFORM STREQUAL "iOS")
 		"-framework AVFoundation"   # needed for microphone access
 		"-framework CoreGraphics"   # needed for image saving
 		"-framework GameController" # needed for controller input
-		${NOAHH_LOADER_PATH}/include/link/ios/libcares.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libcurl.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libnghttp2.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libcrypto.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libssl.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libz.a
-		${NOAHH_LOADER_PATH}/include/link/ios/libzstd.a
 	)
-	# TODO: this applies to all platforms' static libs & headers, maybe these should be done only for loader
-	target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_LOADER_PATH}/include/link/ios/include)
 
 	target_compile_definitions(${PROJECT_NAME} INTERFACE
 		-DGLES_SILENCE_DEPRECATION
@@ -86,15 +77,7 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "MacOS")
 		"-framework OpenGL"
 		"-framework SystemConfiguration"
 		${NOAHH_LOADER_PATH}/include/link/macos/libfmod.dylib
-		${NOAHH_LOADER_PATH}/include/link/macos/libcares.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libcurl.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libnghttp2.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libcrypto.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libssl.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libz.a
-		${NOAHH_LOADER_PATH}/include/link/macos/libzstd.a
 	)
-	target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_LOADER_PATH}/include/link/macos/include)
 
 	target_compile_definitions(${PROJECT_NAME} INTERFACE
 		-DCommentType=CommentTypeDummy
@@ -125,24 +108,10 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "Win64")
 		${NOAHH_LOADER_PATH}/include/link/win64/fmod.lib
 		opengl32
 	)
-	target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_LOADER_PATH}/include/link/win64/include)
 
 	if (PROJECT_IS_TOP_LEVEL AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 		target_link_libraries(${PROJECT_NAME} INTERFACE
 			${NOAHH_LOADER_PATH}/include/link/win64/gd-libcurl.lib
-		)
-	else()
-		target_link_libraries(${PROJECT_NAME} INTERFACE
-			${NOAHH_LOADER_PATH}/include/link/win64/cares.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/libcurl.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/nghttp2.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/libcrypto.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/libssl.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/zs.lib
-			${NOAHH_LOADER_PATH}/include/link/win64/zstd_static.lib
-			secur32
-			ntdll
-			userenv
 		)
 	endif()
 
@@ -164,19 +133,11 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "Android32")
 	target_link_libraries(${PROJECT_NAME} INTERFACE
 		c
 		unwind
-		${NOAHH_LOADER_PATH}/include/link/android32/libcares.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libcurl.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libnghttp2.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libcrypto.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libssl.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libz.a
-		${NOAHH_LOADER_PATH}/include/link/android32/libzstd.a
 		${NOAHH_LOADER_PATH}/include/link/android32/libcocos2dcpp.so
 		${NOAHH_LOADER_PATH}/include/link/android32/libfmod.so
 		GLESv2
 		log
 	)
-	target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_LOADER_PATH}/include/link/android32/include)
 
 	set(NOAHH_OUTPUT_NAME "Noahh.android32")
 	set(NOAHH_PLATFORM_BINARY "Noahh.android32.so")
@@ -195,23 +156,15 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "Android64")
 	target_link_libraries(${PROJECT_NAME} INTERFACE
 		c
 		unwind
-		${NOAHH_LOADER_PATH}/include/link/android64/libcares.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libcurl.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libnghttp2.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libcrypto.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libssl.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libz.a
-		${NOAHH_LOADER_PATH}/include/link/android64/libzstd.a
 		${NOAHH_LOADER_PATH}/include/link/android64/libcocos2dcpp.so
 		${NOAHH_LOADER_PATH}/include/link/android64/libfmod.so
 		GLESv2
 		log
 	)
-	target_include_directories(${PROJECT_NAME} INTERFACE ${NOAHH_LOADER_PATH}/include/link/android64/include)
 
 	# this should help with fixing exceptions
 	set(ANDROID_STL c++_shared)
-  # a little desperate
+	# a little desperate
 	add_definitions(-DANDROID_STL=c++_shared)
 
 	set(NOAHH_OUTPUT_NAME "Noahh.android64")
@@ -226,4 +179,3 @@ elseif (NOAHH_TARGET_PLATFORM STREQUAL "Android64")
 else()
 	message(FATAL_ERROR "Unknown platform ${NOAHH_TARGET_PLATFORM}")
 endif()
-

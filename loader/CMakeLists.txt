@@ -180,10 +180,6 @@ if (NOAHH_NO_UNDEFINED_VIRTUALS)
 	target_compile_definitions(${PROJECT_NAME} PUBLIC NOAHH_NO_UNDEFINED_VIRTUALS)
 endif()
 
-# CA Bundle
-CPMAddPackage("gh:noahh-sdk/net_libs#8243565")
-target_link_libraries(${PROJECT_NAME} ca-bundle)
-
 # Package resources for UI
 package_noahh_resources_now(
 	${PROJECT_NAME}
@@ -248,16 +244,10 @@ if (NOT NOAHH_BUILDING_DOCS)
 	set(MZ_FETCH_LIBS ON CACHE INTERNAL "" FORCE)
 	set(SKIP_INSTALL_ALL ON CACHE INTERNAL "")
 	set(MZ_FORCE_FETCH_LIBS OFF CACHE INTERNAL "" FORCE)
-	if (WIN32)
-		set(ZLIB_LIBRARY "${NOAHH_LOADER_PATH}/include/link/win64/zs.lib")
-		set(ZLIB_INCLUDE_DIR "${NOAHH_LOADER_PATH}/include/link/win64/include")
-	else()
-		string(TOLOWER ${NOAHH_TARGET_PLATFORM} _libs_folder)
-		set(ZLIB_LIBRARY "${NOAHH_LOADER_PATH}/include/link/${_libs_folder}/libz.a")
-		set(ZLIB_INCLUDE_DIR "${NOAHH_LOADER_PATH}/include/link/${_libs_folder}/include")
-	endif()
+	# sets ZLIB_LIBRARY and ZLIB_INCLUDE_DIR
+	include(DownloadNetLibs.cmake)
 	
-	CPMAddPackage("gh:noahh-sdk/minizip-ng#8dc51ce")
+	CPMAddPackage("gh:noahh-sdk/minizip-ng#e9dda96")
 
 	# Silence warnings from dependencies
 	include(CheckCXXCompilerFlag)
@@ -393,4 +383,3 @@ if (NOT NOAHH_BUILDING_DOCS)
 		endif()
 	endif()
 endif()
-
