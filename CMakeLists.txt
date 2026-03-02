@@ -266,10 +266,10 @@ CPMAddPackage("gh:fmtlib/fmt#12.1.0")
 
 # allow overriding asp / arc versions
 if (NOT DEFINED NOAHH_ARC_VERSION)
-	set(NOAHH_ARC_VERSION "#3b33385" CACHE STRING "")
+	set(NOAHH_ARC_VERSION "@1.5.4" CACHE STRING "")
 endif()
 if (NOT DEFINED NOAHH_ASP_VERSION)
-	set(NOAHH_ASP_VERSION "#5689c11" CACHE STRING "")
+	set(NOAHH_ASP_VERSION "#3d6e924" CACHE STRING "")
 endif()
 
 CPMAddPackage("gh:Nipfswd/asp2${NOAHH_ASP_VERSION}")
@@ -285,7 +285,7 @@ set_target_properties(asp PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
 set_target_properties(arc PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
 if (TARGET qsox)
 	set_target_properties(qsox PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
-endif() 
+endif()
 
 target_compile_definitions(${PROJECT_NAME} INTERFACE MAT_JSON_DYNAMIC=1)
 
