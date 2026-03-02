@@ -16,8 +16,8 @@ on:
   pull_request:
   push:
     branches:
-    - '**'
-    - '!no-build-**'
+    - '**'              # every branch
+    - '!no-build-**'    # unless marked as no-build
 
 env:
   CPM_SOURCE_CACHE: ${{ github.workspace }}/cpm-cache
@@ -79,6 +79,10 @@ jobs:
         mv epic-xwin/xwin-*-x86_64-unknown-linux-musl/xwin ./xwin
         ./xwin --arch x86_64 --sdk-version 10.0.22621 --accept-license list
 
+    # this caches '.xwin-cache/**/*' but that's actually only gonna
+    # contain the manifest cuz we only ran `xwin list` so far
+    - name: Clear xwin cache
+      run: rm -rf .xwin-cache
     - name: Setup xwin Cache
       id: xwin-cache
       uses: actions/cache@v4
@@ -115,10 +119,6 @@ jobs:
         which lld-link
         clang-cl --version
         lld-link --version
-
-    # ADDED
-    - name: Clear CPM cache
-      run: rm -rf cpm-cache
 
     - name: Configure
       run: >
@@ -179,6 +179,15 @@ jobs:
         has-sccache: ${{ inputs.use-ccache }}
       if: inputs.build-debug-info
 
+    # due to very strange performance issues, sccache is currently disabled for macos. sorry
+
+    # - name: Setup caches
+    #   uses: ./.github/actions/setup-cache
+    #   with:
+    #     host: mac
+    #     target: mac
+    #     use-ccache: ${{ github.event_name != 'workflow_dispatch' || inputs.use-ccache }}
+
     - name: Setup Ninja
       uses: ./.github/actions/setup-ninja
       with:
@@ -187,7 +196,6 @@ jobs:
     - name: Setup CLI
       uses: noahh-sdk/cli/.github/actions/setup@main
 
-    # ADDED
     - name: Clear CPM cache
       run: rm -rf cpm-cache
 
@@ -276,10 +284,6 @@ jobs:
       uses: ./.github/actions/setup-dump-sym
       id: breakpad-tools
 
-    # ADDED
-    - name: Clear CPM cache
-      run: rm -rf cpm-cache
-
     - name: Configure
       run: >
         ${{ env.base-configure-command }}
@@ -297,6 +301,7 @@ jobs:
         ${{ env.base-build-command }}
         ${{ steps.build-debug-info.outputs.extra-build }}
 
+    # hardcoding toolchain path :(
     - name: Dump Symbols
       run: |
         ${{ steps.breakpad-tools.outputs.binary-path }} ./bin/nightly/Noahh.${{ matrix.config.id }}.so -o ./bin/nightly/Noahh.${{ matrix.config.id }}.so.sym
@@ -331,17 +336,25 @@ jobs:
         has-sccache: ${{ inputs.use-ccache }}
       if: inputs.build-debug-info
 
+    # - name: Setup caches
+    #   uses: ./.github/actions/setup-cache
+    #   with:
+    #     host: mac
+    #     target: ios
+    #     use-ccache: ${{ github.event_name != 'workflow_dispatch' || inputs.use-ccache }}
+
     - name: Setup Ninja
       uses: ./.github/actions/setup-ninja
       with:
         host: mac
 
+    # - name: Install LLVM
+    #   run: |
+    #     brew install llvm
+    #     echo "/opt/homebrew/opt/llvm/bin" >> $GITHUB_PATH
+
     - name: Setup CLI
       uses: noahh-sdk/cli/.github/actions/setup@main
-
-    # ADDED
-    - name: Clear CPM cache
-      run: rm -rf cpm-cache
 
     - name: Configure
       run: >
@@ -369,6 +382,7 @@ jobs:
         target: mac
       if: inputs.build-debug-info && (success() || failure())
 
+
   publish:
     name: Publish
     runs-on: ubuntu-latest
@@ -382,7 +396,7 @@ jobs:
         id: ref
         run: |
           echo "version=$(cat VERSION | xargs)" >> $GITHUB_OUTPUT
-          echo "hash=$(git.rev-parse --short "$GITHUB_SHA")" >> $GITHUB_OUTPUT
+          echo "hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_OUTPUT
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
@@ -393,7 +407,7 @@ jobs:
           mv noahh-installer-win/noahh-installer-win.exe noahh-installer-${{ steps.ref.outputs.hash }}-win.exe
           mv ./installer/linux/install.sh noahh-installer-${{ steps.ref.outputs.hash }}-linux.sh
 
-      - name: Zip MacOS Artifacts
+      - name: Zip MacOS Artifacts 
         uses: vimtor/action-zip@v1.2
         with:
           files: noahh-mac/Noahh.dylib noahh-mac/NoahhBootstrapper.dylib

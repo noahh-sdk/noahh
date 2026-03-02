@@ -278,6 +278,7 @@ if (NOT PROJECT_IS_TOP_LEVEL AND NOT DEFINED ARC_FEATURE_FULL)
 	set(ARC_FEATURE_FULL OFF CACHE BOOL "" FORCE)
 endif()
 CPMAddPackage("gh:Nipfswd/arc${NOAHH_ARC_VERSION}")
+CPMAddPackage("gh:nipfswd/qsox#4f09592")
 
 # use unity for both arc and its dependencies,
 # they're fairly small libs so it helps a lot with compile times
