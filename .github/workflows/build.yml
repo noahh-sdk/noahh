@@ -408,7 +408,7 @@ jobs:
           mv ./installer/linux/install.sh noahh-installer-${{ steps.ref.outputs.hash }}-linux.sh
 
       - name: Zip MacOS Artifacts 
-        uses: vimtor/action-zip@v1.2 
+        uses: vimtor/action-zip@v1.2
         with:
           files: noahh-mac/Noahh.dylib noahh-mac/NoahhBootstrapper.dylib
           dest: noahh-${{ steps.ref.outputs.hash }}-mac.zip
