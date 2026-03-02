@@ -266,7 +266,7 @@ CPMAddPackage("gh:fmtlib/fmt#12.1.0")
 
 # allow overriding asp / arc versions
 if (NOT DEFINED NOAHH_ARC_VERSION)
-	set(NOAHH_ARC_VERSION "#efb5bcb" CACHE STRING "")
+	set(NOAHH_ARC_VERSION "#60850c4" CACHE STRING "")
 endif()
 if (NOT DEFINED NOAHH_ASP_VERSION)
 	set(NOAHH_ASP_VERSION "#3d6e924" CACHE STRING "")
@@ -278,7 +278,6 @@ if (NOT PROJECT_IS_TOP_LEVEL AND NOT DEFINED ARC_FEATURE_FULL)
 	set(ARC_FEATURE_FULL OFF CACHE BOOL "" FORCE)
 endif()
 CPMAddPackage("gh:Nipfswd/arc${NOAHH_ARC_VERSION}")
-CPMAddPackage("gh:nipfswd/qsox#4f09592")
 
 # use unity for both arc and its dependencies,
 # they're fairly small libs so it helps a lot with compile times
