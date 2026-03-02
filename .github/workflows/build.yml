@@ -194,6 +194,9 @@ jobs:
     - name: Setup CLI
       uses: noahh-sdk/cli/.github/actions/setup@main
 
+    - name: Clear CPM cache
+      run: rm -rf cpm-cache
+
     - name: Configure
       run: >
         ${{ env.base-configure-command }}
