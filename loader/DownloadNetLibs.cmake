@@ -47,7 +47,7 @@ else()
 	)
 endif()
 
-CPMAddPackage("gh:noahh-sdk/net_libs#b5b810c")
+CPMAddPackage("gh:noahh-sdk/net_libs#963652a")
 target_link_libraries(${PROJECT_NAME} ca-bundle)
 
 if (WIN32)
