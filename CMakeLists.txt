@@ -266,7 +266,7 @@ CPMAddPackage("gh:fmtlib/fmt#12.1.0")
 
 # allow overriding asp / arc versions
 if (NOT DEFINED NOAHH_ARC_VERSION)
-	set(NOAHH_ARC_VERSION "@1.5.3" CACHE STRING "")
+	set(NOAHH_ARC_VERSION "#3b33385" CACHE STRING "")
 endif()
 if (NOT DEFINED NOAHH_ASP_VERSION)
 	set(NOAHH_ASP_VERSION "#5689c11" CACHE STRING "")
