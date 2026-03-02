@@ -48,12 +48,6 @@ jobs:
         has-sccache: ${{ inputs.use-ccache }}
       if: inputs.build-debug-info
 
-    - name: Delete ALL CPM caches
-      run: |
-        rm -rf $GITHUB_WORKSPACE/cpm-cache
-        rm -rf $GITHUB_WORKSPACE/build/cpm-cache
-        rm -rf ~/.cache/CPM
-
     - name: Setup caches
       uses: ./.github/actions/setup-cache
       with:
@@ -87,8 +81,6 @@ jobs:
 
     # this caches '.xwin-cache/**/*' but that's actually only gonna
     # contain the manifest cuz we only ran `xwin list` so far
-    - name: Clear xwin cache
-      run: rm -rf .xwin-cache
     - name: Setup xwin Cache
       id: xwin-cache
       uses: actions/cache@v4
@@ -131,6 +123,7 @@ jobs:
         ${{ env.base-configure-command }}
         -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+        -DNOAHH_UNITY_BUILD=ON
         ${{ steps.build-debug-info.outputs.extra-configure }}
       env:
         SPLAT_DIR: ${{ github.workspace }}/.xwin-cache/splat
@@ -201,9 +194,6 @@ jobs:
 
     - name: Setup CLI
       uses: noahh-sdk/cli/.github/actions/setup@main
-
-    - name: Clear CPM cache
-      run: rm -rf cpm-cache
 
     - name: Configure
       run: >
@@ -413,7 +403,7 @@ jobs:
           mv noahh-installer-win/noahh-installer-win.exe noahh-installer-${{ steps.ref.outputs.hash }}-win.exe
           mv ./installer/linux/install.sh noahh-installer-${{ steps.ref.outputs.hash }}-linux.sh
 
-      - name: Zip MacOS Artifacts 
+      - name: Zip MacOS Artifacts
         uses: vimtor/action-zip@v1.2
         with:
           files: noahh-mac/Noahh.dylib noahh-mac/NoahhBootstrapper.dylib
