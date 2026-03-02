@@ -285,7 +285,7 @@ set_target_properties(asp PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
 set_target_properties(arc PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
 if (TARGET qsox)
 	set_target_properties(qsox PROPERTIES UNITY_BUILD ON UNITY_BUILD_BATCH_SIZE 64)
-endif()
+endif() 
 
 target_compile_definitions(${PROJECT_NAME} INTERFACE MAT_JSON_DYNAMIC=1)
 
