@@ -48,6 +48,12 @@ jobs:
         has-sccache: ${{ inputs.use-ccache }}
       if: inputs.build-debug-info
 
+    - name: Delete ALL CPM caches
+      run: |
+        rm -rf $GITHUB_WORKSPACE/cpm-cache
+        rm -rf $GITHUB_WORKSPACE/build/cpm-cache
+        rm -rf ~/.cache/CPM
+
     - name: Setup caches
       uses: ./.github/actions/setup-cache
       with:
