@@ -14,7 +14,7 @@ static void triggerEvent() {
 #ifdef NOAHH_IS_MACOS
 
 struct GameExitHook : Modify<GameExitHook, PlatformToolbox> {
-    void platformShutdown() {
+    static void platformShutdown() {
         triggerEvent();
         PlatformToolbox::platformShutdown();
     }
