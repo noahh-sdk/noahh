@@ -12,7 +12,7 @@
     "developer": "Noahh Team",
     "description": "The Noahh mod loader",
     "links": {
-        "community": "https://discord.com/invite/9e43WMKzhp",
+        "community": "https://discord.com/invite/aKhJ7YyAk2",
         "homepage": "https://noahh-sdk.org",
         "source": "https://github.com/noahh-sdk/noahh"
     },
@@ -128,7 +128,7 @@
         },
         "file-log-level": {
             "type": "string",
-            "default": "info",
+            "default": "debug",
             "name": "File Log Level",
             "description": "Sets the log level for the <cb>log files</c>.",
             "one-of": ["trace", "debug", "info", "warn", "error"]
